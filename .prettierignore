@@ -1,0 +1,9 @@
+node_modules
+storage/
+vendor
+.phpunit.result.cache
+phpunit_reports/
+.scannerwork/
+.idea
+.vscode
+mongo/
