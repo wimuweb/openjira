@@ -19,8 +19,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
             return updateEntry(req, res);
 
-        case 'DELETE':
-            return deleteEntry(req, res);
+
         case 'GET':
             return getEntry(req, res);
 
@@ -59,19 +58,14 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 }
 
-/**
- * aca borre la logica, he implemente una respuesta
- * sencilla para ver si era algo con la logica que
- * proporcionaste y o algo que yo hice mal
- * y arroja el mismo error.
- */
-const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { id } = req.query;
-    return res.status(200).json({ message: 'el getentry funciona' })
-}
 
-//  esto lo cree como prueba haber si solo me pasaba con get
-const deleteEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query;
-    return res.status(200).json({ message: 'el delete funciona' })
+    await db.connect();
+    const entryInDB = await Entry.findById(id);
+    if (!entryInDB) {
+        await db.disconnect();
+        return res.status(400).json({ message: 'No hay entrada con ese ID: ' + id });
+    }
+    return res.status(200).json(entryInDB);
 }
